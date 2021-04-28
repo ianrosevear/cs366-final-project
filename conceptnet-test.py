@@ -4,13 +4,19 @@
 
 ## the requests package is used to make api requests
 import requests
+api_calls = 0
+
+def call_api(s):
+    api_calls += 1
+    return requests.get(s).json()
+
 
 ## hardcode a start word for test purposes
 startword = "table"
 
 ## form is 'http://api.conceptnet.io/c/en/' + word
 api = "http://api.conceptnet.io"
-node1 = requests.get(api + "/c/en/" + startword).json()
+node1 = call_api(api + "/c/en/" + startword)
 
 ## to find all the "HasA" edges that start from "table":
 # first get the id of the node we are working with:
@@ -27,7 +33,7 @@ query = "/query?" +\
         "start=" + node1_id +\
         "&" +\
         "rel=/r/HasA"
-node1_has = requests.get(api + query).json()
+node1_has = call_api(api + query)
 
 ### doing this directly appears not to work for some reason
 ##relations = "http://api.conceptnet.io" +\
@@ -45,7 +51,7 @@ query = "/query?" +\
         "end=" + node2_id +\
         "&" +\
         "rel=/r/HasA"
-has_node2 = requests.get(api + query).json()
+has_node2 = call_api(api + query)
 
 # next we get the id of something that has node2
 # and is dissimilar to node1
@@ -61,12 +67,18 @@ for i, n in enumerate(has_node2['edges'][0:max_lookups]):
                      "node1=" + node1_id +\
                      "&" +\
                      "node2=" + curr_id
-    
-    relatedness = requests.get(api + related_lookup).json()['value']
-    
+
+    relatedness = call_api(api + related_lookup)['value']
+
     if relatedness < max_similarity:
         node3_id = curr_id
         break
 
 
 
+
+
+
+
+
+print(api_calls)
