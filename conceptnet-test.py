@@ -7,12 +7,13 @@ import requests
 api_calls = 0
 
 def call_api(s):
-    api_calls += 1
+    global api_calls
+    api_calls = api_calls + 1
     return requests.get(s).json()
 
 
 ## hardcode a start word for test purposes
-startword = "table"
+startword = "keyboard"
 
 ## form is 'http://api.conceptnet.io/c/en/' + word
 api = "http://api.conceptnet.io"
@@ -57,7 +58,8 @@ has_node2 = call_api(api + query)
 # and is dissimilar to node1
 # we can't do this too many times lest we overstep the limits
 # of the API. /relatedness counts as two requests
-max_similarity = 5 #idk what number to make this yet
+max_similarity = .5 #idk what number to make this yet
+min_similarity = .05
 max_lookups = 5 #to make sure we don't try too many times
 
 node3_id = ""
@@ -70,15 +72,25 @@ for i, n in enumerate(has_node2['edges'][0:max_lookups]):
 
     relatedness = call_api(api + related_lookup)['value']
 
-    if relatedness < max_similarity:
+    if min_similarity < relatedness < max_similarity:
         node3_id = curr_id
         break
 
+# finding attribute of node3 that node1 doesn't share
+query = "/query?" +\
+        "start=" + node3_id +\
+        "&" +\
+        "rel=/r/UsedFor"
+node3_used = call_api(api + query)
 
 
+# print riddles
+# format: node2_id, node3_used, node1_id
+def print_riddles(has, used, answer):
+    print("What has", has,
+          "but isn't used for", used['edges'][0]['end']['@id'],
+          "??", answer)
 
-
-
-
+print_riddles(node2_id, node3_used, node1_id)
 
 print(api_calls)
