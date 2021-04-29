@@ -85,7 +85,7 @@ node3_id = ""
 ##    if min_similarity < relatedness < max_similarity:
 ##        node3_id = curr_id
 ##        break
-for i, n in enumerate(partof_node2['edges'][0:max_lookups]):
+for n in partof_node2['edges'][0:max_lookups]:
     curr_id = n['start']['@id']
     related_lookup = "/relatedness?" +\
                      "node1=" + node1_id +\

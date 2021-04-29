@@ -12,17 +12,21 @@ def call_api(s):
     return requests.get(s).json()
 
 def print_riddles(has, used, answer):
-    return "What has"+ str(has)+ "but isn't used for" + str(used['edges'][0]['end']['@id'])+ "??"+ str(answer)
+    return "What has "+ str(has)+\
+    " but isn't used for " + str(used['edges'][0]['end']['@id'])+\
+     "?\n"+ str(answer) +"!"
 ## hardcode a start word for test purposes
 startword = "dog"
 
 ## form is 'http://api.conceptnet.io/c/en/' + word
+## the form of an @id is /c/en/word
 api = "http://api.conceptnet.io"
 node1 = call_api(api + "/c/en/" + startword)
-node1_id = node1["@id"]
-#if part of -> used case: 
+#node1_id = node1["@id"]
+#if part of -> used case:
 def find_pair_has(node1, index):
     #checking index so that it doesn't loop forever on words that will not work in this form
+    node1_id = node1["@id"]
     while index < 5:
         query = "/query?" +\
                 "start=" + node1_id +\
@@ -36,7 +40,7 @@ def find_pair_has(node1, index):
             node2_hasid = node1_has['edges'][index]['end']['@id']
             # then we query for things that also have node2
             query = "/query?" +\
-                    "end=" + node2_partofid +\
+                    "end=" + node2_hasid +\
                     "&" +\
                     "rel=/r/HasA"
             has_node2 = call_api(api + query)
@@ -48,7 +52,7 @@ def find_pair_has(node1, index):
             min_similarity = .05
             max_lookups = 5 #to make sure we don't try too many times
             node3_id = ""
-            for i, n in enumerate(has_node2['edges'][0:max_lookups]):
+            for n in has_node2['edges'][0:max_lookups]:
                 curr_id = n['start']['@id']
                 related_lookup = "/relatedness?" +\
                                  "node1=" + node1_id +\
@@ -65,15 +69,12 @@ def find_pair_has(node1, index):
             node3_used = call_api(api + query)
             output_string = print_riddles(node2_hasid, node3_used, node1_id)
         #if there is an error, try again with index 1 higher
-        except: 
+        except:
             return find_pair_has(node1, index+1)
         #if there is no error, return the output string
-        else:
-            return output_string
+        return output_string
 
-        
+
 #returns none for some reason?? can't figure out why
 print(find_pair_has(node1, 0))
-print(api_calls)
-
-
+print("\nAPI calls:", api_calls)
