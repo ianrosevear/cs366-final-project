@@ -14,9 +14,6 @@ def call_api(n, type, *args):
     # is this a relatedness request
     is_relatedness = False
 
-    # increment api calls
-    api_calls = n+1
-
     #generate type string
     if type == "w":
         type = "/c/en/"

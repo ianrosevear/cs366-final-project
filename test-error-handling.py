@@ -60,12 +60,38 @@ startword = "dog"
 ac, node1 = rf.call_api(ac, "w", startword)
 
 #node1_id = node1["@id"]
+def find_pair(startword, index, p1, p2):
+    
+    global ac
+    n1_id = "/c/en/"+startword
+    
+    if p1 == "H":
+        rel1 = "rel=/r/HasA"
+    #fill in other cases later
+    if p2 == "U":
+        rel2 = "rel=/r/UsedFor"
+    #fill in other cases later
+
+
+    ac, n1_p1 = rf.call_api(ac, "q", "start="+n1_id, rel1)
+        
+    for n2 in n1_p1[0:2]:
+        #get id of n2
+        #get edges that end in node2 w rel1 and start from n3
+        #get edges that go from n3 to n4 with rel2
+        #if all this works, break
+        #if we ever get an error, continue
+
+        
+
+
+
 #if part of -> used case:
 def find_pair_has(node1, index):
     global ac
     #checking index so that it doesn't loop forever on words that will not work in this form
     node1_id = node1["@id"]
-    while index < 5:
+    while index < 3:
         # query for things that node1 has
         ac, node1_has = rf.call_api(ac, "q", "start="+node1_id, "rel=/r/HasA")
 
@@ -110,6 +136,7 @@ def find_pair_has(node1, index):
         #if there is no error, return the output string
         return output_string
 
-
 print(find_pair_has(node1, 0))
 print("\nAPI calls (counting relatedness as 2):", ac)
+
+
