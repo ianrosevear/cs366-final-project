@@ -14,6 +14,42 @@ def print_riddles(has, used, answer):
     " but isn't used for " + str(used['edges'][0]['end']['@id'])+\
      "?\n"+ str(answer) +"!"
 
+#idea for improving this function to work with more riddle types:
+#def print_riddles(node2, node3, node1, code1, code2):
+    #add another two input variables: code1 and code2 for the corresponding category types: 
+	#H: has a 
+	#C: capable of
+	#U: used for
+	#L: located at
+	#D: desires
+	#P: part of
+    #output_string = ""
+    #if code1 == H:
+        #output_string += "What has" + str(node2)
+    #if code1 == C:
+        #output_string += "What can" + str(node2)
+    #if code1 == U:
+	#output_string += "What is used for" + str(node2)
+    #if code1 == L:
+	#output_string += "What is found at" + str(node2)
+    #if code1 == D:
+	#output_string += "What likes" + str(node2)
+    #if code1 == P:
+	#output_string += "What is part of" + str(node2)
+    #if code2 == H:
+	#output_string += "but doesn't have" + str(node3) + "?"
+    #if code2 == C:
+        #output_string += "but can't" + str(node3) + "?"
+    #if code2 == U:
+	#output_string += "but isn't used for" + str(node3) + "?"
+    #if code2 == L:
+	#output_string += "but isn't found at" + str(node3) + "?"
+    #if code2 == D:
+	#output_string += "but doesn't like" + str(node3) + "?"
+    #if code2 == P:
+	#output_string += "but isn't part of" + str(node3) + "?"
+    #output_string += str(node1) + "!"
+    #return output_string
 
 
 ## hardcode a start word for test purposes
@@ -60,7 +96,13 @@ def find_pair_has(node1, index):
                     break
 
             ac, node3_used = rf.call_api(ac, "q", "start="+node3_id, "rel=/r/UsedFor")
-
+            #for my proposed print function this would need to be added here instead
+	    #of the current way of doing all of this in the printing stage:
+            #node3_output = node3_used['edges'][0]['end']['@id']
+            #output_string = print_riddles(node2_hasid, node3_output, node1_id)
+            #maybe put this in a if else block that is inside a try except block to look 
+            #through the first 2 entries or something before going back and trying a 
+            #different original word
             output_string = print_riddles(node2_hasid, node3_used, node1_id)
         #if there is an error, try again with index 1 higher
         except:
@@ -69,6 +111,5 @@ def find_pair_has(node1, index):
         return output_string
 
 
-#returns none for some reason?? can't figure out why
 print(find_pair_has(node1, 0))
 print("\nAPI calls (counting relatedness as 2):", ac)
