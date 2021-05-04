@@ -16,8 +16,8 @@ def print_riddles(has, used, answer):
 
 #idea for improving this function to work with more riddle types:
 #def print_riddles(node2, node3, node1, code1, code2):
-    #add another two input variables: code1 and code2 for the corresponding category types: 
-	#H: has a 
+    #add another two input variables: code1 and code2 for the corresponding category types:
+	#H: has a
 	#C: capable of
 	#U: used for
 	#L: located at
@@ -60,11 +60,13 @@ startword = "dog"
 ac, node1 = rf.call_api(ac, "w", startword)
 
 #node1_id = node1["@id"]
-def find_pair(startword, index, p1, p2):
-    
+# p1 is true of both things
+# p2 is true of node3 but not answer(node1)
+def find_pair(startword, p1, p2):
+
     global ac
     n1_id = "/c/en/"+startword
-    
+
     if p1 == "H":
         rel1 = "rel=/r/HasA"
     #fill in other cases later
@@ -73,16 +75,51 @@ def find_pair(startword, index, p1, p2):
     #fill in other cases later
 
 
+    #every edge starting from n1 that has p1
     ac, n1_p1 = rf.call_api(ac, "q", "start="+n1_id, rel1)
-        
-    for n2 in n1_p1[0:2]:
+    if len(n1_p1) == 0:
+        return None
+    
+    #for every edge from n1 to n2 across p1
+    for n1_p1_n2 in n1_p1['edges'][0:2]:
+
         #get id of n2
+        n2_id = n1_p1_n2['end']["@id"]
+        print("n2_id", n2_id)
+        
         #get edges that end in node2 w rel1 and start from n3
-        #get edges that go from n3 to n4 with rel2
+        ac, p1_n2 = rf.call_api(ac, "q", rel1, "end="+n2_id)
+        if len(p1_n2) == 0:
+            return None
+        
+        #for every edge from n3 to n2 across p1
+        for n3_p1_n2 in p1_n2['edges'][0:2]:
+            n3_id = n3_p1_n2['start']['@id']
+            print("n3 id", n3_id)
+
+            #make sure n3 and n1 are different
+            max_sim = .5
+            min_sim = .05
+            ac, n1_n3_rscore = rf.call_api(ac, "r", "node1="+n1_id, "node2="+n3_id)
+            if not (min_sim < n1_n3_rscore < max_sim):
+                continue
+            
+            #get edges that go from n3 to n4 across p2
+            ac, n3_p2 = rf.call_api(ac, "q", rel2, "start="+n3_id)
+            #if n3 doesn't have any nodes on the other end of p2, error
+            if len(n3_p2) == 0:
+                return None
+
+            #pick an n4
+            n4_id = n3_p2['edges'][0]['end']['@id']
+            #return (n2_id, n4_id, n1_id, p1, p2)
+
         #if all this works, break
         #if we ever get an error, continue
 
-        
+    return None
+
+
 
 
 
@@ -126,8 +163,8 @@ def find_pair_has(node1, index):
 	    #of the current way of doing all of this in the printing stage:
             #node3_output = node3_used['edges'][0]['end']['@id']
             #output_string = print_riddles(node2_hasid, node3_output, node1_id)
-            #maybe put this in a if else block that is inside a try except block to look 
-            #through the first 2 entries or something before going back and trying a 
+            #maybe put this in a if else block that is inside a try except block to look
+            #through the first 2 entries or something before going back and trying a
             #different original word
             output_string = print_riddles(node2_hasid, node3_used, node1_id)
         #if there is an error, try again with index 1 higher
@@ -138,5 +175,3 @@ def find_pair_has(node1, index):
 
 print(find_pair_has(node1, 0))
 print("\nAPI calls (counting relatedness as 2):", ac)
-
-
