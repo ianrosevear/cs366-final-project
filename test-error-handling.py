@@ -57,7 +57,7 @@ startword = "dog"
 
 ## request form is 'http://api.conceptnet.io/c/en/' + word
 ## the form of an @id is /c/en/word
-ac, node1 = rf.call_api(ac, "w", startword)
+#ac, node1 = rf.call_api(ac, "w", startword)
 
 #node1_id = node1["@id"]
 # p1 is true of both things
@@ -112,7 +112,7 @@ def find_pair(startword, p1, p2):
 
             #pick an n4
             n4_id = n3_p2['edges'][0]['end']['@id']
-            #return (n2_id, n4_id, n1_id, p1, p2)
+            return (n2_id, n4_id, n1_id, p1, p2)
 
         #if all this works, break
         #if we ever get an error, continue
@@ -173,5 +173,6 @@ def find_pair_has(node1, index):
         #if there is no error, return the output string
         return output_string
 
-print(find_pair_has(node1, 0))
+#print(find_pair_has(node1, 0))
+print(find_pair("dog", "H", "U"))
 print("\nAPI calls (counting relatedness as 2):", ac)
