@@ -87,18 +87,18 @@ def find_pair(startword, p1, p2):
     ac, n1_p1 = call_api(ac, "q", "start="+n1_id, rel1)
     if len(n1_p1) == 0:
         return None
-    
+
     #for every edge from n1 to n2 across p1
     for n1_p1_n2 in n1_p1['edges'][0:2]:
 
         #get id of n2
         n2_id = n1_p1_n2['end']["@id"]
-        
+
         #get edges that end in node2 w rel1 and start from n3
         ac, p1_n2 = call_api(ac, "q", rel1, "end="+n2_id)
         if len(p1_n2) == 0:
             return None
-        
+
         #for every edge from n3 to n2 across p1
         for n3_p1_n2 in p1_n2['edges'][0:2]:
             n3_id = n3_p1_n2['start']['@id']
@@ -109,7 +109,7 @@ def find_pair(startword, p1, p2):
             ac, n1_n3_rscore = call_api(ac, "r", "node1="+n1_id, "node2="+n3_id)
             if not (min_sim < n1_n3_rscore < max_sim):
                 continue
-            
+
             #get edges that go from n3 to n4 across p2
             ac, n3_p2 = call_api(ac, "q", rel2, "start="+n3_id)
             #if n3 doesn't have any nodes on the other end of p2, error
@@ -166,4 +166,3 @@ def print_riddles(node2, node3, node1, code1, code2):
         output_string += "but isn't part of" + str(node3) + "?"
     output_string += str(node1) + "!"
     return output_string
-

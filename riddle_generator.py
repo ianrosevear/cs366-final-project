@@ -4,7 +4,37 @@ import time
 import requests
 import riddle_functions as rf
 #todo: make a list of startwords
-startword_list = ["dog", "bus", "shark", "pencil", "soup"]
+startword_list = ["water",
+"time",
+"way",
+"year",
+"work",
+"government",
+"day",
+"man",
+"world",
+"life",
+"part",
+"house",
+"course",
+"case",
+"system",
+"place",
+"end",
+"group",
+"company",
+"party",
+"information",
+"school",
+"fact",
+"money",
+"point",
+"example",
+"state",
+"business",
+"night",
+"area",]
+
 def generate_riddles(startword):
     print("generating riddle for", startword, "...")
     riddle_output = rf.find_pair(startword, "H", "U")
