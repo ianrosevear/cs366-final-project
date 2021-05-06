@@ -89,7 +89,7 @@ def find_pair(startword, p1, p2):
         return None
 
     #for every edge from n1 to n2 across p1
-    for n1_p1_n2 in n1_p1['edges'][0:2]:
+    for j,n1_p1_n2 in enumerate(n1_p1['edges'][0:2]):
 
         #get id of n2
         n2_id = n1_p1_n2['end']["@id"]
@@ -97,10 +97,14 @@ def find_pair(startword, p1, p2):
         #get edges that end in node2 w rel1 and start from n3
         ac, p1_n2 = call_api(ac, "q", rel1, "end="+n2_id)
         if len(p1_n2) == 0:
-            return None
+            if j == 1:
+                return "Try new p1"
+            else:
+                continue
 
         #for every edge from n3 to n2 across p1
-        for n3_p1_n2 in p1_n2['edges'][0:2]:
+        for i,n3_p1_n2 in enumerate(p1_n2['edges'][0:2]):
+            print(i)
             n3_id = n3_p1_n2['start']['@id']
 
             #make sure n3 and n1 are different
@@ -114,16 +118,26 @@ def find_pair(startword, p1, p2):
             ac, n3_p2 = call_api(ac, "q", rel2, "start="+n3_id)
             #if n3 doesn't have any nodes on the other end of p2, error
             if len(n3_p2['edges']) == 0:
-                return None
-
-            #pick an n4
-            n4_id = n3_p2['edges'][0]['end']['@id']
-            return (n2_id, n4_id, n1_id, p1, p2)
+                if i == 1:
+                    return "Try new p2"
+                else:
+                    continue
+           #pick an n4
+            ac, n1_p2 = call_api(ac, "q", rel2, "start="+n1_id)
+            n1_p2_list = []
+            for x in range(len(n1_p2['edges'])):
+                n1_p2_list.append(n1_p2['edges'][x]['end']['@id'])
+            #n4_id = n3_p2['edges'][0]['end']['@id']
+            for x in range(len(n3_p2['edges'])):
+                n4_id = n3_p2['edges'][x]['end']['@id']
+                if n4_id not in n1_p2_list:
+                    return (n2_id, n4_id, n1_id, p1, p2)
+                    
 
         #if all this works, break
         #if we ever get an error, continue
 
-    return None
+    return "Try new p1 or p2"
 
 
 
