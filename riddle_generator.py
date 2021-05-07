@@ -36,46 +36,46 @@ startword_list = ["water",
 "area",]
 
 def generate_riddles(startword):
-    list_of_categories_p1 = ["U", "L", "C", "L", "D", "P"]
-    list_of_categories_p2 = ["C", "C", "H", "L", "D", "P"]
+    list_of_categories_p1 = ["D", "L", "U", "R", "C", "I"]
+    list_of_categories_p2 = ["I", "C", "H", "L", "R", "P"]
     max_tries = 9
     i = 0
     j = 0
+    print("generating a riddle for the startword", startword, "...")
     for n in range(max_tries):
         if n % 3 == 2:
             print("waiting 60 seconds")
             time.sleep(60)
-        
         p1 = list_of_categories_p1[i]
         p2 = list_of_categories_p2[j]
         riddle_output = rf.find_pair(startword, p1, p2)
         if riddle_output == "Try new p1" or riddle_output == None:
-            print("e1")
+            #print("e1")
             if n==9:
-                return "Sorry, no riddle can be made with this startword"
-            i = i+1
+                return "Sorry, we can't make a very good riddle with this startword."
+            i = (i+1)%6
             continue
         if riddle_output == "Try new p2":
-            print("e2")
+            #print("e2")
             if n==9:
-                return "Sorry, no riddle can be made with this startword"
-            j = j+1
+                return "Sorry, we can't make a very good riddle with this startword."
+            j = (j+1)%6
             continue
         if riddle_output == "Try new p1 or p2":
             if n==9:
-                return "Sorry, no riddle can be made with this startword"
+                return "Sorry, we can't make a very good riddle with this startword."
             if n % 2 == 0:
-                i = i+1
+                i = (i+1)%6
             else:
-                j = j+1
+                j = (j+1)%6
             continue
-        print("e4")
-        print(riddle_output)
+        #print("e4")
+        #print(riddle_output)
         return rf.print_riddles(riddle_output[0],riddle_output[1],riddle_output[2],riddle_output[3],riddle_output[4])
-    return "Sorry, no riddle can be made with this startword"
+    return "Sorry, we can't make a very good riddle with this startword."
         
 for word in startword_list:
     print(generate_riddles(word))
-    print("generating next riddle after 60 second cooldown...")
     print()
+    print("generating next riddle after 60 second cooldown...")
     time.sleep(60)
