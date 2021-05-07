@@ -1,4 +1,6 @@
 import requests
+import sys
+import time
 
 # call_api
 # take in n, type, a1, a2, a3....
@@ -69,6 +71,10 @@ def find_pair(startword, p1, p2):
         rel1 = "rel=/r/Desires"
     if p1 == "P":
         rel1 = "rel=/r/PartOf"
+    if p1 == "R":
+        rel1 = "rel=/r/RelatedTo"
+    if p1 == "I":
+        rel1 = "rel=/r/IsA"
     if p2 == "H":
         rel2 = "rel=/r/HasA"
     if p2 == "C":
@@ -81,6 +87,10 @@ def find_pair(startword, p1, p2):
         rel2 = "rel=/r/Desires"
     if p2 == "P":
         rel2 = "rel=/r/PartOf"
+    if p2 == "R":
+        rel2 = "rel=/r/RelatedTo"
+    if p2 == "I":
+        rel2 = "rel=/r/IsA"
 
 
     #every edge starting from n1 that has p1
@@ -104,7 +114,7 @@ def find_pair(startword, p1, p2):
 
         #for every edge from n3 to n2 across p1
         for i,n3_p1_n2 in enumerate(p1_n2['edges'][0:2]):
-            print(i)
+            #print(i)
             n3_id = n3_p1_n2['start']['@id']
 
             #make sure n3 and n1 are different
@@ -143,8 +153,17 @@ def find_pair(startword, p1, p2):
 
 
 ############################################################################
-
-
+def clean(node):
+    node = node.replace("_", " ")
+    node = node.replace("/c/en/", "")
+    return node
+############################################################################
+##def sleep(timer):
+##    for i in range(0,timer):
+##        time_left = timer-i
+##        print(time_left, end = "", flush = True)
+##        time.sleep(1)
+############################################################################
 def print_riddles(node2, node3, node1, code1, code2):
     #add another two input variables: code1 and code2 for the corresponding category types:
 	#H: has a
@@ -153,30 +172,41 @@ def print_riddles(node2, node3, node1, code1, code2):
 	#L: located at
 	#D: desires
 	#P: part of
+    node2 = clean(node2)
+    node3 = clean(node3)
+    node1 = clean(node1)
     output_string = ""
     if code1 == "H":
-        output_string += "What has" + str(node2)
+        output_string += "What has " + str(node2)
     if code1 == "C":
-        output_string += "What can" + str(node2)
+        output_string += "What can " + str(node2)
     if code1 == "U":
-        output_string += "What is used for" + str(node2)
+        output_string += "What is used for " + str(node2)
     if code1 == "L":
-        output_string += "What is found at" + str(node2)
+        output_string += "What is found at " + str(node2)
     if code1 == "D":
-        output_string += "What likes" + str(node2)
+        output_string += "What likes " + str(node2)
     if code1 == "P":
-        output_string += "What is part of" + str(node2)
+        output_string += "What is part of " + str(node2)
+    if code1 == "R":
+        output_string += "What is related to " + str(node2)
+    if code1 =="I":
+        output_string += "What is a " + str(node2)
     if code2 == "H":
-        output_string += "but doesn't have" + str(node3) + "?"
+        output_string += " but doesn't have " + str(node3) + "?"
     if code2 == "C":
-        output_string += "but can't" + str(node3) + "?"
+        output_string += " but can't " + str(node3) + "?"
     if code2 == "U":
-        output_string += "but isn't used for" + str(node3) + "?"
+        output_string += " but isn't used for " + str(node3) + "?"
     if code2 == "L":
-        output_string += "but isn't found at" + str(node3) + "?"
+        output_string += " but isn't found at " + str(node3) + "?"
     if code2 == "D":
-        output_string += "but doesn't like" + str(node3) + "?"
+        output_string += " but doesn't like " + str(node3) + "?"
     if code2 == "P":
-        output_string += "but isn't part of" + str(node3) + "?"
-    output_string += str(node1) + "!"
+        output_string += " but isn't part of " + str(node3) + "?"
+    if code2 == "R":
+        output_string += " but isn't related to " + str(node3) + "?"
+    if code2 == "I":
+        output_string += " but is not a " + str(node3) + "?"
+    output_string += " " + str(node1) + "!"
     return output_string
