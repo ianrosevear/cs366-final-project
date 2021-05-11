@@ -4,24 +4,24 @@ import time
 import requests
 import riddle_functions as rf
 #todo: make a list of startwords
-startword_list = ["water",
-"time",
-"way",
-"year",
-"work",
-"government",
-"day",
-"man",
-"world",
-"life",
-"part",
-"house",
-"course",
-"case",
-"system",
-"place",
-"end",
-"group",
+startword_list = [#"water",
+#"time",
+#"way",
+#"year",
+#"work",
+#"government",
+#"day",
+#"man",
+#"world",
+#"life",
+#"part",
+#"house",
+#"course",
+#"case",
+#"system",
+#"place",
+#"end",
+#"group",
 "company",
 "party",
 "information",
@@ -36,8 +36,8 @@ startword_list = ["water",
 "area",]
 
 def generate_riddles(startword):
-    list_of_categories_p1 = ["D", "L", "U", "R", "C", "I"]
-    list_of_categories_p2 = ["I", "C", "H", "L", "R", "P"]
+    list_of_categories_p1 = ["P", "H", "C", "U", "L", "R"]
+    list_of_categories_p2 = ["P", "H", "C", "U", "L", "R"]
     max_tries = 9
     i = 0
     j = 0
@@ -73,7 +73,7 @@ def generate_riddles(startword):
         #print(riddle_output)
         return rf.print_riddles(riddle_output[0],riddle_output[1],riddle_output[2],riddle_output[3],riddle_output[4])
     return "Sorry, we can't make a very good riddle with this startword."
-        
+
 for word in startword_list:
     print(generate_riddles(word))
     print()
