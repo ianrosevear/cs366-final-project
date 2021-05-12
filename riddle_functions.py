@@ -2,6 +2,7 @@ import requests
 import sys
 import time
 
+
 # call_api
 # take in n, type, a1, a2, a3....
 # n: a variable keeping track of the number of API calls
@@ -142,7 +143,7 @@ def find_pair(startword, p1, p2):
                 n4_id = n3_p2['edges'][x]['end']['@id']
                 if n4_id not in n1_p2_list:
                     return (n2_id, n4_id, n1_id, p1, p2)
-                    
+
 
         #if all this works, break
         #if we ever get an error, continue
@@ -210,3 +211,28 @@ def print_riddles(node2, node3, node1, code1, code2):
         output_string += " but is not a " + str(node3) + "?"
     output_string += " " + str(node1) + "!"
     return output_string
+############################################################################
+
+# start, rel --> list of edges
+# start = /c/en/word
+# rel = /r/HasA
+def get_assertions_start(start, rel, assertions):
+
+    output_list = []
+
+    for line in assertions:
+        l = line.split("\t")
+        if l[1] == start and l[0] == rel:
+            output_list.append(l)
+
+    return output_list
+
+def get_assertions_end(end, rel, assertions):
+    output_list = []
+
+    for line in assertions:
+        l = line.split("\t")
+        if l[2] == end and l[0] == rel:
+            output_list.append(l)
+
+    return output_list
