@@ -7,51 +7,43 @@ import riddle_functions as rf
 
 
 #todo: make a list of startwords
-startword_list = [#"water",
-#"time",
-#"way",
-#"year",
-#"work",
-#"government",
-#"day",
-#"man",
-#"world",
-#"life",
-#"part",
-#"house",
-#"course",
-#"case",
-#"system",
-#"place",
-#"end",
-#"group",
+startword_list = ["water","time",
+"way",
+"year",
+"work",
+"government",
+"day",
+"man",
+"world",
+"life",
+"part",
+"house",
+"course",
+"case",
+"system",
+"place",
+"end",
+"group",
 "company",
 "party",
 "information",
 "school",
 "fact",
-"money",
-"point",
-"example",
-"state",
-"business",
-"night",
-"area",]
+"money"]
 
 def generate_riddles(startword, assertions):
-    list_of_categories_p1 = ["P", "H", "C", "U", "L", "R"]
-    list_of_categories_p2 = ["P", "H", "C", "U", "L", "R"]
+    list_of_categories_p1 = ["D", "L", "U", "R", "C", "I"]
+    list_of_categories_p2 = ["I", "C", "H", "L", "R", "P"]
     max_tries = 9
     i = 0
     j = 0
     print("generating a riddle for the startword", startword, "...")
     for n in range(max_tries):
-        if n % 3 == 2:
-            print("waiting 60 seconds")
-            time.sleep(60)
+##        if n % 3 == 2:
+##            print("waiting 60 seconds")
         p1 = list_of_categories_p1[i]
         p2 = list_of_categories_p2[j]
-        riddle_output = rf.find_pair(startword, p1, p2)
+        riddle_output = rf.find_pair(startword, p1, p2, assertions)
         if riddle_output == "Try new p1" or riddle_output == None:
             #print("e1")
             if n==9:
@@ -79,9 +71,8 @@ def generate_riddles(startword, assertions):
 
 
 with open("assertions_list.csv") as fa:
-    assertions = csv.reader(fa, delimiter="\t")
+    reader = csv.reader(fa, delimiter="\t")
+    assertions = list(reader)
     for word in startword_list:
         print(generate_riddles(word, assertions))
         print()
-        print("generating next riddle after 60 second cooldown...")
-        time.sleep(60)
