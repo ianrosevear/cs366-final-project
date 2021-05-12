@@ -2,7 +2,10 @@
 import time
 #use time.sleep(60) to wait 60 seconds before next execution
 import requests
+import csv
 import riddle_functions as rf
+
+
 #todo: make a list of startwords
 startword_list = [#"water",
 #"time",
@@ -35,7 +38,7 @@ startword_list = [#"water",
 "night",
 "area",]
 
-def generate_riddles(startword):
+def generate_riddles(startword, assertions):
     list_of_categories_p1 = ["P", "H", "C", "U", "L", "R"]
     list_of_categories_p2 = ["P", "H", "C", "U", "L", "R"]
     max_tries = 9
@@ -74,8 +77,11 @@ def generate_riddles(startword):
         return rf.print_riddles(riddle_output[0],riddle_output[1],riddle_output[2],riddle_output[3],riddle_output[4])
     return "Sorry, we can't make a very good riddle with this startword."
 
-for word in startword_list:
-    print(generate_riddles(word))
-    print()
-    print("generating next riddle after 60 second cooldown...")
-    time.sleep(60)
+
+with open("assertions_list.csv") as fa:
+    assertions = csv.reader(fa, delimiter="\t")
+    for word in startword_list:
+        print(generate_riddles(word, assertions))
+        print()
+        print("generating next riddle after 60 second cooldown...")
+        time.sleep(60)
