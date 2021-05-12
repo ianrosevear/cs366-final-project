@@ -55,7 +55,7 @@ def call_api(n, type, *args):
 # p1 is true of both things
 # p2 is true of node3 but not answer(node1)
 ac = 0
-def find_pair(startword, p1, p2):
+def find_pair1(startword, p1, p2):
 
     global ac
     n1_id = "/c/en/"+startword
@@ -152,6 +152,100 @@ def find_pair(startword, p1, p2):
 
 
 
+def find_pair(startword, p1, p2, assertions):
+
+    n1_id = "/c/en/"+startword+"/"
+
+    if p1 == "H":
+        rel1 = "/r/HasA/"
+    if p1 == "C":
+        rel1 = "/r/CapableOf/"
+    if p1 == "U":
+        rel1 = "/r/UsedFor/"
+    if p1 == "L":
+        rel1 = "/r/AtLocation/"
+    if p1 == "D":
+        rel1 = "/r/Desires/"
+    if p1 == "P":
+        rel1 = "/r/PartOf/"
+    if p1 == "R":
+        rel1 = "/r/RelatedTo/"
+    if p1 == "I":
+        rel1 = "/r/IsA/"
+    if p2 == "H":
+        rel2 = "/r/HasA/"
+    if p2 == "C":
+        rel2 = "/r/CapableOf/"
+    if p2 == "U":
+        rel2 = "/r/UsedFor/"
+    if p2 == "L":
+        rel2 = "/r/AtLocation/"
+    if p2 == "D":
+        rel2 = "/r/Desires/"
+    if p2 == "P":
+        rel2 = "/r/PartOf/"
+    if p2 == "R":
+        rel2 = "/r/RelatedTo/"
+    if p2 == "I":
+        rel2 = "/r/IsA/"
+
+
+    #every edge starting from n1 that has p1
+    n1_p1 = get_assertions_start(n1_id, rel1, assertions)
+    if len(n1_p1) == 0:
+        return None
+
+    #for every edge from n1 to n2 across p1
+    for j, n1_p1_n2 in enumerate(n1_p1[0:5]):
+
+        #get id of n2
+        n2_id = n1_p1_n2[2]
+        #print("node2 id we are trying:", n2_id)
+
+        #get edges that end in node2 w rel1 and start from n3
+        p1_n2 = get_assertions_end(n2_id, rel1, assertions)
+        #print("p1_n2", p1_n2)
+        if len(p1_n2) == 0:
+            if j == 1:
+                #print("error1")
+                return "Try new p1"
+            else:
+                continue
+
+        #for every edge from n3 to n2 across p1
+        for i,n3_p1_n2 in enumerate(p1_n2[0:5]):
+            n3_id = n3_p1_n2[1]
+            #print("n3_id:", n3_id)
+
+            #make sure n3 and n1 are different
+            #max_sim = .5
+            #min_sim = .05
+            #ac, n1_n3_rscore = call_api(ac, "r", "node1="+n1_id, "node2="+n3_id)
+            #if not (min_sim < n1_n3_rscore < max_sim):
+                #continue
+
+            #get edges that go from n3 to n4 across p2
+            n3_p2 = get_assertions_start(n3_id, rel2, assertions)
+            #print("n3_p2:",n3_p2)
+            #if n3 doesn't have any nodes on the other end of p2, error
+            if len(n3_p2) == 0:
+                if i == 1:
+                    #print("error2")
+                    return "Try new p2"
+                else:
+                    continue
+           #pick an n4
+            n1_p2 = get_assertions_start(n1_id, rel2, assertions)
+            n1_p2_list = [row[2] for row in n1_p2]
+            for row in n3_p2:
+                n4_id = row[2]
+                if n4_id not in n1_p2_list:
+                    #print("n4_id", n4_id)
+                    return (n2_id, n4_id, n1_id, p1, p2)
+        #if all this works, break
+        #if we ever get an error, continue
+
+    return "Try new p1 or p2"
 
 ############################################################################
 def clean(node):
@@ -219,20 +313,26 @@ def print_riddles(node2, node3, node1, code1, code2):
 def get_assertions_start(start, rel, assertions):
 
     output_list = []
-
     for line in assertions:
-        l = line.split("\t")
-        if l[1] == start and l[0] == rel:
-            output_list.append(l)
+        if line[1] == start and line[0] == rel:
+            output_list.append(line)
 
     return output_list
-
 def get_assertions_end(end, rel, assertions):
-    output_list = []
 
+    output_list = []
     for line in assertions:
-        l = line.split("\t")
-        if l[2] == end and l[0] == rel:
-            output_list.append(l)
+        if line[2] == end and line[0] == rel:
+            output_list.append(line)
 
     return output_list
+##def get_assertions_end(end, rel, assertions):
+##    output_list = []
+##
+##    for line in assertions:
+##        print(line)
+##        if line[2] == end and line[0] == rel:
+##            output_list.append(line)
+##        break
+##
+##    return output_list
