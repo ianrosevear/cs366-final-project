@@ -196,10 +196,15 @@ def find_pair(startword, p1, p2, assertions):
         return None
 
     #for every edge from n1 to n2 across p1
-    for j, n1_p1_n2 in enumerate(n1_p1[0:5]):
+    for j, n1_p1_n2 in enumerate(n1_p1[0:10]):
 
         #get id of n2
         n2_id = n1_p1_n2[2]
+        #n2_weight = eval(n1_p1_n2[3])["weight"]
+        #min_weight = 1.1
+       # print("n2_weight", n2_weight)
+        #if n2_weight < min_weight:
+            #continue
         #print("node2 id we are trying:", n2_id)
 
         #get edges that end in node2 w rel1 and start from n3
@@ -213,16 +218,13 @@ def find_pair(startword, p1, p2, assertions):
                 continue
 
         #for every edge from n3 to n2 across p1
-        for i,n3_p1_n2 in enumerate(p1_n2[0:5]):
+        for i,n3_p1_n2 in enumerate(p1_n2[0:10]):
             n3_id = n3_p1_n2[1]
-            #print("n3_id:", n3_id)
-
-            #make sure n3 and n1 are different
-            #max_sim = .5
-            #min_sim = .05
-            #ac, n1_n3_rscore = call_api(ac, "r", "node1="+n1_id, "node2="+n3_id)
-            #if not (min_sim < n1_n3_rscore < max_sim):
+            #n3_weight = eval(n3_p1_n2[3])["weight"]
+            #print("n3_weight", n3_weight, "n3_id", n3_p1_n2)
+            #if n3_weight < min_weight:
                 #continue
+            #print("n3_id:", n3_id)
 
             #get edges that go from n3 to n4 across p2
             n3_p2 = get_assertions_start(n3_id, rel2, assertions)
@@ -239,6 +241,7 @@ def find_pair(startword, p1, p2, assertions):
             n1_p2_list = [row[2] for row in n1_p2]
             for row in n3_p2:
                 n4_id = row[2]
+               # n4_weight = eval(row[3])["weight"]
                 if n4_id not in n1_p2_list:
                     #print("n4_id", n4_id)
                     return (n2_id, n4_id, n1_id, p1, p2)
