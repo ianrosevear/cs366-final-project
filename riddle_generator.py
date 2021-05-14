@@ -4,32 +4,39 @@ import time
 import requests
 import csv
 import riddle_functions as rf
+import random
 
-
-#todo: make a list of startwords
-startword_list = ["water","time",
-"way",
-"year",
-"work",
-"government",
-"day",
-"man",
-"world",
-"life",
-"part",
-"house",
-"course",
-"case",
-"system",
-"place",
-"end",
-"group",
-"company",
-"party",
-"information",
-"school",
-"fact",
-"money"]
+#randomly pick 30 words from the startword file "nouns.txt"
+with open("nouns.txt") as f:
+    nouns_list = []
+    for line in f:
+        line = line.strip("\n\"\,")
+        nouns_list.append(line)
+startword_list = random.sample(nouns_list, 30)
+print(startword_list)
+##startword_list = ["water","time",
+##"way",
+##"year",
+##"work",
+##"government",
+##"day",
+##"man",
+##"world",
+##"life",
+##"part",
+##"house",
+##"course",
+##"case",
+##"system",
+##"place",
+##"end",
+##"group",
+##"company",
+##"party",
+##"information",
+##"school",
+##"fact",
+##"money"]
 
 def generate_riddles(startword, assertions):
     list_of_categories_p1 = ["D", "L", "U", "R", "C", "I"]
