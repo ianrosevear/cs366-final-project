@@ -39,9 +39,9 @@ print(startword_list)
 ##"money"]
 
 def generate_riddles(startword, assertions):
-    list_of_categories_p1 = ["D", "L", "U", "R", "C", "I"]
-    list_of_categories_p2 = ["I", "C", "H", "L", "R", "P"]
-    max_tries = 9
+    list_of_categories_p1 = ["D", "L", "U", "C", "I","H", "R"]
+    list_of_categories_p2 = ["C", "H", "L", "P","U", "I", "R"]
+    max_tries = 20
     i = 0
     j = 0
     print("generating a riddle for the startword", startword, "...")
@@ -55,31 +55,35 @@ def generate_riddles(startword, assertions):
             #print("e1")
             if n==9:
                 return "Sorry, we can't make a very good riddle with this startword."
-            i = (i+1)%6
+            i = (i+1)%7
             continue
         if riddle_output == "Try new p2":
             #print("e2")
             if n==9:
                 return "Sorry, we can't make a very good riddle with this startword."
-            j = (j+1)%6
+            j = (j+1)%7
             continue
         if riddle_output == "Try new p1 or p2":
             if n==9:
                 return "Sorry, we can't make a very good riddle with this startword."
             if n % 2 == 0:
-                i = (i+1)%6
+                i = (i+1)%7
             else:
-                j = (j+1)%6
+                j = (j+1)%7
             continue
         #print("e4")
         #print(riddle_output)
         return rf.print_riddles(riddle_output[0],riddle_output[1],riddle_output[2],riddle_output[3],riddle_output[4])
     return "Sorry, we can't make a very good riddle with this startword."
 
-
-with open("assertions_list.csv") as fa:
+t = time.localtime()
+current_time = time.strftime("%H:%M:%S",t)
+filename = "riddle_output_"+current_time+".txt"
+with open("assertions_list.csv") as fa, open(filename, "w") as out:
     reader = csv.reader(fa, delimiter="\t")
     assertions = list(reader)
     for word in startword_list:
-        print(generate_riddles(word, assertions))
+        riddle = generate_riddles(word, assertions)
+        print(riddle)
         print()
+        out.write(riddle + "\n")
