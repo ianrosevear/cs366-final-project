@@ -1,7 +1,7 @@
 import requests
 import sys
 import time
-
+import random
 
 # call_api
 # take in n, type, a1, a2, a3....
@@ -196,55 +196,43 @@ def find_pair(startword, p1, p2, assertions):
         return None
 
     #for every edge from n1 to n2 across p1
-    for j, n1_p1_n2 in enumerate(n1_p1[0:10]):
+    for j, n1_p1_n2 in enumerate(n1_p1[0:20]):
 
         #get id of n2
         n2_id = n1_p1_n2[2]
-        #n2_weight = eval(n1_p1_n2[3])["weight"]
-        #min_weight = 1.1
-       # print("n2_weight", n2_weight)
-        #if n2_weight < min_weight:
-            #continue
-        #print("node2 id we are trying:", n2_id)
-
         #get edges that end in node2 w rel1 and start from n3
         p1_n2 = get_assertions_end(n2_id, rel1, assertions)
         #print("p1_n2", p1_n2)
         if len(p1_n2) == 0:
             if j == 1:
-                #print("error1")
                 return "Try new p1"
             else:
                 continue
 
         #for every edge from n3 to n2 across p1
-        for i,n3_p1_n2 in enumerate(p1_n2[0:10]):
+        for i,n3_p1_n2 in enumerate(p1_n2[0:20]):
             n3_id = n3_p1_n2[1]
-            #n3_weight = eval(n3_p1_n2[3])["weight"]
-            #print("n3_weight", n3_weight, "n3_id", n3_p1_n2)
-            #if n3_weight < min_weight:
-                #continue
-            #print("n3_id:", n3_id)
-
             #get edges that go from n3 to n4 across p2
             n3_p2 = get_assertions_start(n3_id, rel2, assertions)
-            #print("n3_p2:",n3_p2)
             #if n3 doesn't have any nodes on the other end of p2, error
             if len(n3_p2) == 0:
                 if i == 1:
-                    #print("error2")
                     return "Try new p2"
                 else:
                     continue
            #pick an n4
             n1_p2 = get_assertions_start(n1_id, rel2, assertions)
             n1_p2_list = [row[2] for row in n1_p2]
+            n4_list=[]
             for row in n3_p2:
                 n4_id = row[2]
-               # n4_weight = eval(row[3])["weight"]
                 if n4_id not in n1_p2_list:
-                    #print("n4_id", n4_id)
-                    return (n2_id, n4_id, n1_id, p1, p2)
+                    n4_list.append(n4_id)
+            length = len(n4_list)
+            if length != 0:
+                index = random.randint(0, length-1)
+                n4_chosen = n4_list[index]
+                return (n2_id, n4_chosen, n1_id, p1, p2)
         #if all this works, break
         #if we ever get an error, continue
 
