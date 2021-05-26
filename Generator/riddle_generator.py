@@ -22,14 +22,16 @@ import random
 #     for word in test_set:
 #         test.write(word + "\n")
 # startword_list=["dog", "horse"]
-with open("test_set.txt") as file:
-    nouns_list = []
-    for line in file:
-        line = line.strip("\n\"\,")
-        nouns_list.append(line)
+##with open("test_set.txt") as file:
+##    nouns_list = []
+##    for line in file:
+##        line = line.strip("\n\"\,")
+##        nouns_list.append(line)
+##
+##startword_list = random.sample(nouns_list, 30)
+##print(startword_list)
 
-startword_list = random.sample(nouns_list, 30)
-print(startword_list)
+startword_list = ["dog", "house"]
 def generate_riddles(startword, assertions):
     list_of_categories_p1 = ["D", "L", "U", "C", "I","H", "R"]
     list_of_categories_p2 = ["C", "H", "L", "P","U", "I", "R"]
