@@ -1,4 +1,5 @@
 Title: Riddle Generation
+Celia Morral and Ian Rosevear
 
 
 How to use: Almost everything needed to run the program is located in the Generator folder. In addition to the files provided, a list of every ConceptNet edge needs to be included in this folder, which can be downloaded here: https://s3.amazonaws.com/conceptnet/downloads/2019/edges/conceptnet-assertions-5.7.0.csv.gz. To generate riddles for a desired startword, modify the startword_list at the top of riddle_generator.py to include any number of nouns to be used as answers for riddles. This will generate a file of several candidate riddles for each word. Then run selection.py with the output file as an argument to get its choice of a single best riddle for each word.
